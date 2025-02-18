@@ -1,48 +1,39 @@
-const aliceTumbling1: Keyframe[] = [
+
+
+const aliceTumbling: Keyframe[] = [
   { transform: 'rotate(0) scale(1)' },
   { transform: 'rotate(360deg) scale(0)' }
 ];
 
-const aliceTiming1: KeyframeEffectOptions = {
+const aliceTiming: KeyframeEffectOptions = {
   duration: 2000,
   iterations: 1,
   fill: 'forwards'
 };
 
-const alice10 = document.querySelector<HTMLElement>("#alice1");
-const alice20 = document.querySelector<HTMLElement>("#alice2");
-const alice30 = document.querySelector<HTMLElement>("#alice3");
+async function animateSequentially() {
+  const alice1 = document.querySelector<HTMLElement>("#alice1");
+  const alice2 = document.querySelector<HTMLElement>("#alice2");
+  const alice3 = document.querySelector<HTMLElement>("#alice3");
 
-if(alice10 && alice20 && alice30) {
-  // Promise chain  
-  alice10.animate(aliceTumbling1, aliceTiming1).finished  
-    .then(() => {
-        return alice20
-                .animate(aliceTumbling1, aliceTiming1)
-                .finished;     
-    })
-    .then(() => {
-      return alice30
-              .animate(aliceTumbling1, aliceTiming1)
-              .finished;
-    })
-    .catch((err) => alert(`Error when promising ... ${err.message}`));
-}
-else{
-  console.warn("#alice not found");
+  if (!alice1 || !alice2 || !alice3) {
+      console.warn("#alice not found");
+      return;
+  }
+
+  try {
+      await alice1.animate(aliceTumbling, aliceTiming).finished;
+      
+      await alice2.animate(aliceTumbling, aliceTiming).finished;
+      
+      await alice3.animate(aliceTumbling, aliceTiming).finished;
+      
+      console.log('All animations completed');
+  } catch (err) {
+      alert(`Error when animating ... ${err instanceof Error ? err.message : String(err)}`);
+  }
 }
 
-// alice10
-//     .animate(aliceTumbling1, aliceTiming1)
-//     .finished
-//     .then((res) => {
-//         console.log(res);
-//         alice20
-//             .animate(aliceTumbling1, aliceTiming1)
-//             .finished
-//             .then((res) => {
-//                 console.log(res);
-//                 alice30.animate(aliceTumbling1, aliceTiming1);
-//             })
-//     });
-  
+document.addEventListener('DOMContentLoaded', () => {
+  animateSequentially();
+});

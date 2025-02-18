@@ -2,3 +2,37 @@
 - Is there a difference in the flow of execution from when the code was in the setTimeout function?
 - Is the flow of execution in both these examples different from the flow of execution with the examples using the fetch() API, which also returns a promise? 
 - If yes, explain the code execution difference. Add your explanation to this file.
+
+
+
+
+
+
+    # Execution Flow Differences
+
+## Direct Promise Execution (No setTimeout)
+1. Promise executor runs synchronously
+2. Computation happens immediately
+3. Promise resolves/rejects in the same event loop cycle
+4. .then/.catch handlers are scheduled for the next microtask queue
+
+## With setTimeout
+1. Promise executor runs synchronously
+2. setTimeout callback is scheduled for the next macrotask queue
+3. Computation is deferred
+4. Promise remains pending until the next event loop cycle
+5. .then/.catch handlers execute after the setTimeout callback
+
+## fetch() API
+1. Promise executor runs synchronously
+2. Network request is initiated immediately
+3. Promise remains pending until network response
+4. Actual I/O happens asynchronously in the background
+5. .then/.catch handlers execute only after network completion
+
+The key difference is that fetch() involves real asynchronous I/O operations, while setTimeout artificially defers execution. The version without setTimeout performs synchronous computation but still maintains the promise interface for consistency.
+
+In the context of sum2DArray:
+- The direct version is more appropriate since there's no actual async operation
+- The setTimeout version was just simulating async behavior
+- fetch() would be used when real network operations are needed
